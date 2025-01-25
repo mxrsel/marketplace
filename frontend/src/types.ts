@@ -39,3 +39,27 @@ export interface GlobalError {
         [key: string]: string;
     };
 }
+
+export interface Item {
+  _id: string;
+  user: User;
+  category: Category;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  price: number;
+}
+
+export interface ItemMutation {
+  user: string;
+  category: string;
+  title: string;
+  description: string;
+  imageUrl: File | null;
+  price: string;
+}
+
+export interface Category {
+  _id: string;
+  title: string;
+}
