@@ -11,7 +11,6 @@ title: {
     type: Schema.Types.ObjectId,
     ref: 'Category',
     required: [true, 'Category is required'],
-    unique: true
   },
   user: {
     type: Schema.Types.ObjectId,

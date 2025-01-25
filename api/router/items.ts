@@ -16,7 +16,7 @@ itemsRouter.get('/', async(_req, res, next) => {
   }
 });
 
-itemsRouter.post('/', auth, imagesUpload.single('image'), (req, res, next) => {
+itemsRouter.post('/', auth, imagesUpload.single('imageUrl'), async(req, res, next) => {
   try {
     let expressReq = req as RequestWithUser;
     const user = expressReq.user;
@@ -31,9 +31,13 @@ itemsRouter.post('/', auth, imagesUpload.single('image'), (req, res, next) => {
       category: req.body.category,
       title: req.body.title,
       description: req.body.description,
-      imageUrl: req.file ? `images/${req.file.filename}` : null,
+      imageUrl: req.file ? `public/images/${req.file.filename}` : null,
       price: Number(req.body.price)
     }
+
+    const newItem = new Item(addItem);
+
+     await newItem.save();
 
     res.status(200).send(addItem);
   }catch(e){
