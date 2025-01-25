@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import mongoDb from "./mongoDb";
 import path from "path";
 import config from "./config";
+import { userRouter } from './router/users';
+import { itemsRouter } from './router/items';
 
 
 const app = express();
@@ -13,6 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+app.use('/users', userRouter);
+app.use('/items', itemsRouter);
 
 const run = async () => {
     await mongoose.connect(config.mongoDbPath);
