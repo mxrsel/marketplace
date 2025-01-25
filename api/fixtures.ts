@@ -15,9 +15,6 @@ const run = async () => {
 
  await Category.create(
     {
-      title: 'all Items'
-    },
-    {
       title: 'Computers'
     },
     {

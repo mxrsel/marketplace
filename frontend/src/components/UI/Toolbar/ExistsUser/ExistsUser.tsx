@@ -4,6 +4,7 @@ import { User } from '../../../../types.ts';
 import { useAppDispatch } from '../../../../app/hooks.ts';
 import { logout } from '../../../../store/thunk/usersThunk.ts';
 import { logoutUser } from '../../../../store/slice/usersSlice.ts';
+import { NavLink } from 'react-router-dom';
 
 
 interface Props {
@@ -30,6 +31,9 @@ const ExistsUser: React.FC<Props> = ({user}) => {
   return (
     <>
       <div>
+        <Button component={NavLink} to={'/addNewItem'}>
+          Add New Item
+        </Button>
         <Button
           onClick={onClick}
           style={{color: 'white'}}>

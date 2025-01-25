@@ -63,3 +63,5 @@ export interface Category {
   _id: string;
   title: string;
 }
+
+export type ApiItem =   Omit<ItemMutation, '_id'>

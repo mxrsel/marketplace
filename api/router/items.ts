@@ -46,6 +46,27 @@ itemsRouter.post('/', auth, imagesUpload.single('imageUrl'), async(req, res, nex
   }
 });
 
+itemsRouter.get('/:categoryId', async (req, res, next) => {
+  const { categoryId } = req.params;
+  try {
+    const items = await Item.find({ category: categoryId });
+    res.send(items);
+  } catch (e) {
+    next(e)
+  }
+});
+
+itemsRouter.get('/:id', async(req, res, next) => {
+  if(!req.params.id) res.status(404).send('Not found!');
+
+  try {
+    res.send(await Item.findById(req.params.id));
+  } catch(e) {
+    next(e)
+  }
+});
+
+
 itemsRouter.delete('/:id', auth, async(req, res, next) => {
   try {
     const {id} = req.params;
