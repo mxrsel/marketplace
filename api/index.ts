@@ -6,6 +6,7 @@ import path from "path";
 import config from "./config";
 import { userRouter } from './router/users';
 import { itemsRouter } from './router/items';
+import { categoryRouter } from './router/categories';
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/users', userRouter);
 app.use('/items', itemsRouter);
+app.use('/categories', categoryRouter);
 
 const run = async () => {
     await mongoose.connect(config.mongoDbPath);
