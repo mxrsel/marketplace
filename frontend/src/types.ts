@@ -33,6 +33,7 @@ export interface LoginMutation {
 }
 
 export interface GlobalError {
+    error: string
     success: boolean;
     message: {
         [key: string]: string;

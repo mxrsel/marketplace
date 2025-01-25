@@ -53,7 +53,7 @@ itemsRouter.delete('/:id', auth, async(req, res, next) => {
     const user = expressReq.user;
 
     if(!user) {
-      res.status(400).send({message: 'Please pass authorization! '});
+      res.status(403).send({message: 'Yoy can not delete item '});
       return
     }
 
