@@ -1,13 +1,19 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Button, MenuItem, TextField } from "@mui/material";
-import { Category, ItemMutation } from '../../types.ts';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { ItemMutation } from '../../types.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { getAllCategories } from '../../store/thunk/categoriesThunk.ts';
+import FileInput from '../UI/FileInput.tsx';
+import { CloudUpload } from '@mui/icons-material';
+import Grid from '@mui/material/Grid2';
 
 interface Props {
   onSubmit: (item: ItemMutation) => void;
-  categories: Category[];
 }
 
-const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
+const ItemForm: React.FC<Props> = ({ onSubmit }) => {
+  const dispatch = useAppDispatch();
+  const categories = useAppSelector((state) => state.categories.categories)
   const [item, setItem] = useState<ItemMutation>({
     user: "",
     category: "",
@@ -17,6 +23,12 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
     price: "",
   });
 
+
+  useEffect(() => {
+    dispatch(getAllCategories());
+  }, [dispatch]);
+
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -25,6 +37,12 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const selectChangeHandler = (e: SelectChangeEvent) => {
+    const { name, value } = e.target;
+    setItem((prevState) => ({ ...prevState, [name]: value }));
+  };
+
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -43,7 +61,7 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        label="Пользователь"
+        label="user"
         name="user"
         value={item.user}
         onChange={handleChange}
@@ -51,24 +69,34 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
         required
         margin="normal"
       />
+      {categories.length === 0 ? null : (
+        <Grid size={{ xs: 12 }}>
+          <FormControl fullWidth>
+            <InputLabel id="category">Category</InputLabel>
+            <Select
+              labelId="category"
+              id="category_id"
+              value={item.category}
+              name="category"
+              required
+              label="Category"
+              onChange={selectChangeHandler}
+            >
+              <MenuItem value="" disabled>
+                Select category
+              </MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                  {category.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      )}
+
       <TextField
-        select
-        label="Категория"
-        name="category"
-        value={item.category}
-        onChange={handleChange}
-        fullWidth
-        required
-        margin="normal"
-      >
-        {categories.map((cat) => (
-          <MenuItem key={cat._id} value={cat._id}>
-            {cat.title}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        label="Заголовок"
+        label="Title"
         name="title"
         value={item.title}
         onChange={handleChange}
@@ -77,7 +105,7 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
         margin="normal"
       />
       <TextField
-        label="Описание"
+        label="Description"
         name="description"
         value={item.description}
         onChange={handleChange}
@@ -87,7 +115,7 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
         multiline
       />
       <TextField
-        label="Цена"
+        label="Price"
         name="price"
         type="number"
         value={item.price}
@@ -96,9 +124,16 @@ const ItemForm: React.FC<Props> = ({ onSubmit, categories }) => {
         required
         margin="normal"
       />
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+      <FileInput
+        fullWidth
+        label="Image"
+        name="image"
+        buttonText="Choose file"
+        buttonProps={{ startIcon: <CloudUpload /> }}
+        onChange={handleFileChange}
+      />
       <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-        Создать пост
+        Create item
       </Button>
     </form>
   );

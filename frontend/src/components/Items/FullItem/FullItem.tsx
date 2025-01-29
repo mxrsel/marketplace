@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { CardMedia, Divider } from '@mui/material';
-import { apiURL } from '../../../globalConstants.ts';
+import { imageURL } from '../ItemsItem.tsx';
 
 interface Props {
   itemData: Item
@@ -13,34 +13,38 @@ interface Props {
 const FullItem: React.FC<Props> = ({itemData}) => {
   return (
     <Grid container direction='column'>
-      <Box>
-        <Typography variant="overline" color="text.secondary" sx={{ marginBottom: 1 }}>
-        </Typography>
-      </Box>
-      <Divider sx={{ mb: 1, mt: 1 }} />
-      <Typography variant='h4' style={{marginBottom: 4}} textAlign="center">
-        {itemData.title}
-      </Typography>
-      <CardMedia
-        component="img"
-        height='200'
-        image={`${apiURL}/${itemData.imageUrl}`}
-        alt={itemData.title}
-      />
-      <Box>
-        <Typography>
-          {itemData.user.username}
-        </Typography>
-        <Typography variant='body1' style={{marginTop: 3}}>
-          {itemData.description}
-        </Typography>
-        <Typography>
-          {itemData.price}
-        </Typography>
-        <Typography>
-          {itemData.category.title}
-        </Typography>
-      </Box>
+        <Grid container spacing={4} alignItems="center">
+            <CardMedia
+              component="img"
+              image={`${imageURL}/${itemData.imageUrl}`}
+              alt={itemData.title}
+              sx={{
+                borderRadius: 2,
+                width: "100%",
+                height: 300,
+                objectFit: "cover",
+              }}
+            />
+          </Grid>
+
+            <Box>
+              <Typography variant="h4" fontWeight="bold">
+                {itemData.title}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography color="text.secondary">
+                Seller: {itemData.user.username}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                {itemData.description}
+              </Typography>
+              <Typography variant="h5" color="primary" sx={{ mt: 2 }}>
+                {itemData.price} KGS
+              </Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>
+                Category: {itemData.category.title}
+              </Typography>
+            </Box>
     </Grid>
   );
 };

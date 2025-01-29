@@ -37,7 +37,7 @@ const RegisterPage = () => {
   const onSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(register(user));
+      await dispatch(register(user)).unwrap();
       navigate('/');
     } catch(e) {
       console.log(e)
@@ -125,22 +125,6 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   error={Boolean(getFieldErr('phoneNumber'))}
                   helperText={getFieldErr('phoneNumber')}
-                />
-              </Grid>
-
-              <Grid size={{xs: 12}}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={user.password}
-                  onChange={handleChange}
-                  error={Boolean(getFieldErr('password'))}
-                  helperText={getFieldErr('password')}
                 />
               </Grid>
             </Grid>

@@ -13,7 +13,7 @@ interface Props {
 
 const ExistsUser: React.FC<Props> = ({user}) => {
   const dispatch = useAppDispatch();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const onClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -31,9 +31,6 @@ const ExistsUser: React.FC<Props> = ({user}) => {
   return (
     <>
       <div>
-        <Button component={NavLink} to={'/addNewItem'}>
-          Add New Item
-        </Button>
         <Button
           onClick={onClick}
           style={{color: 'white'}}>
@@ -46,6 +43,11 @@ const ExistsUser: React.FC<Props> = ({user}) => {
           onClose={onClose}>
           <MenuItem>
             Profile
+          </MenuItem>
+          <MenuItem>
+            <Button component={NavLink} to={'/addNewItem'}>
+              Add New Item
+            </Button>
           </MenuItem>
           <MenuItem>
             Settings

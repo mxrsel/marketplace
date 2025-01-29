@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { useEffect } from 'react';
-import { getAllItems } from '../../store/thunk/itemsThunk.ts';
 import Spinner from '../UI/Spinner/Spinner.tsx';
 import ItemsItem from './ItemsItem.tsx';
+import { getAllItems } from '../../store/thunk/itemsThunk.ts';
 
 const Items = () => {
 const dispatch = useAppDispatch();

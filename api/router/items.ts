@@ -3,12 +3,13 @@ import Item from '../models/Item';
 import auth, { RequestWithUser } from '../middlewate/auth';
 import { imagesUpload } from '../multer';
 import { ItemMutation } from '../types';
+import Category from '../models/Category';
 
 export const itemsRouter = express.Router();
 
 itemsRouter.get('/', async(_req, res, next) => {
   try {
-    const items = await Item.find().populate('category', '_id title');
+    const items = await Item.find().populate('category', 'title');
     res.status(200).send(items);
   } catch(e) {
     res.status(500).send({message: '500 Server error'});
@@ -16,7 +17,7 @@ itemsRouter.get('/', async(_req, res, next) => {
   }
 });
 
-itemsRouter.post('/', auth, imagesUpload.single('imageUrl'), async(req, res, next) => {
+itemsRouter.post('/', imagesUpload.single('imageUrl'), auth, async(req, res, next) => {
   try {
     let expressReq = req as RequestWithUser;
     const user = expressReq.user;
@@ -26,12 +27,17 @@ itemsRouter.post('/', auth, imagesUpload.single('imageUrl'), async(req, res, nex
       return
     }
 
+    if (req.body.category) {
+      const category = await Category.findById(req.body.category);
+      if (!category) res.status(404).send('Not Found category');
+    }
+
     const addItem: ItemMutation  = {
       user: user._id.toString(),
       category: req.body.category,
-      title: req.body.title,
-      description: req.body.description,
-      imageUrl: req.file ? `public/images/${req.file.filename}` : null,
+      title: req.body.title.toString(),
+      description: req.body.description.toString(),
+      imageUrl: req.file ? `/${req.file.filename}` : null,
       price: Number(req.body.price)
     }
 
@@ -46,26 +52,29 @@ itemsRouter.post('/', auth, imagesUpload.single('imageUrl'), async(req, res, nex
   }
 });
 
-itemsRouter.get('/:categoryId', async (req, res, next) => {
-  const { categoryId } = req.params;
-  try {
-    const items = await Item.find({ category: categoryId });
-    res.send(items);
-  } catch (e) {
-    next(e)
-  }
-});
-
 itemsRouter.get('/:id', async(req, res, next) => {
   if(!req.params.id) res.status(404).send('Not found!');
 
   try {
-    res.send(await Item.findById(req.params.id));
+    res.send(await Item.findById(req.params.id).populate('category', 'title'));
   } catch(e) {
     next(e)
   }
 });
 
+itemsRouter.get('/category/:categoryId', async (req, res, next) => {
+  const { categoryId } = req.params;
+  try {
+    const items = await Item.find({ category: categoryId });
+    if (!items.length) {
+      res.status(404).send({ message: 'Items not found for this category' });
+      return
+    }
+    res.status(200).send(items);
+  } catch (e) {
+    next(e)
+  }
+});
 
 itemsRouter.delete('/:id', auth, async(req, res, next) => {
   try {

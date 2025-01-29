@@ -1,17 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Category, Item } from '../../types.ts';
-import { getAllCategories, getItemsByCategory } from '../thunk/categoriesThunk.ts';
+import { createSlice } from '@reduxjs/toolkit';
+import { Category } from '../../types.ts';
+import { fetchCategories, getAllCategories } from '../thunk/categoriesThunk.ts';
 
 interface CategoriesSliceProps {
   categories: Category[];
-  categoryItems: Item[];
   categoriesLoading: boolean;
   categoriesError: boolean;
 }
 
 const initialState: CategoriesSliceProps = {
   categories: [],
-  categoryItems: [],
   categoriesLoading: false,
   categoriesError: false,
 }
@@ -32,7 +30,6 @@ const categoriesSlice = createSlice({
         getAllCategories.fulfilled, (state, {payload: categories}) => {
           state.categoriesLoading = false;
           state.categories = categories;
-          state.categoriesError = false;
         }
       )
       .addCase(
@@ -42,20 +39,19 @@ const categoriesSlice = createSlice({
         }
       )
       .addCase(
-        getItemsByCategory.pending, (state) => {
+        fetchCategories.pending, (state) => {
           state.categoriesLoading = true;
           state.categoriesError = false;
         }
       )
       .addCase(
-        getItemsByCategory.fulfilled, (state, action: PayloadAction<Item[]>) => {
+        fetchCategories.fulfilled, (state, {payload: categories}) => {
           state.categoriesLoading = false;
-          state.categoryItems = action.payload;
-          state.categoriesError = false;
+          state.categories = categories;
         }
       )
       .addCase(
-        getItemsByCategory.rejected, (state) => {
+        fetchCategories.rejected, (state) => {
           state.categoriesLoading = false;
           state.categoriesError = true
         }

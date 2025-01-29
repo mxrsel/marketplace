@@ -1,8 +1,8 @@
 import React from 'react';
 import { Category } from '../../types.ts';
-import { Card } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { NavLink } from 'react-router-dom';
+import Box from '@mui/material/Box';
 
 interface Props {
   categories: Category;
@@ -11,11 +11,15 @@ interface Props {
 const CategoriesItem: React.FC<Props> = ({categories}) => {
   return (
     <>
-      <NavLink to={`/items/${categories._id}`}>
-      <Card>
-        <Typography>{categories.title}</Typography>
-      </Card>
-      </NavLink>
+      <Box
+        sx={{textDecoration: 'none'}}
+        component={NavLink}
+        to={`/items/category/${categories._id}`}>
+        <Typography variant='h5' sx={{
+          marginRight: 2,
+          color: 'white'
+        }}>{categories.title}</Typography>
+      </Box>
     </>
   );
 };

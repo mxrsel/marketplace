@@ -43,7 +43,7 @@ export const createNewItem = createAsyncThunk<void, ItemMutation, { state: RootS
 );
 
 export const getItemById = createAsyncThunk<Item | null, string>(
-  'albums/getAlbumById',
+  'items/getItemById',
   async(itemId) => {
     const response = await axiosApi.get<Item | null>(`/items/${itemId}`);
     if(!response.data) return null;
@@ -52,12 +52,20 @@ export const getItemById = createAsyncThunk<Item | null, string>(
   }
 );
 
+export const getItemsByCategory = createAsyncThunk(
+  'items/getItemsByCategory',
+  async(categoryId: string) => {
+    const response = await axiosApi.get<Item[]>(`/items/category/${categoryId}`);
+    if (!response.data) return [];
+    return response.data;
+  }
+)
+
 export const deleteItem = createAsyncThunk<void, string, { state: RootState }>(
   'items/deleteItem',
   async (itemId, { getState }) => {
     try {
       const token = getState().users.user?.token;
-
       await axiosApi.delete(`/items/${itemId}`, {
         headers: { Authorization: token },
       });

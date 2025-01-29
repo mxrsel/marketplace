@@ -14,3 +14,12 @@ categoryRouter.get('/', async(req, res, next) => {
    next(e)
   }
 });
+
+categoryRouter.get('/navigate', async (req, res, next) => {
+  try {
+    const categories = await Category.find();
+    res.send(categories);
+  } catch (e) {
+    next(e);
+  }
+});

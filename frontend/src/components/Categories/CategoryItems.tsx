@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { useParams } from 'react-router-dom';
 import Spinner from '../UI/Spinner/Spinner.tsx';
 import ItemsItem from '../Items/ItemsItem.tsx';
-import { getItemsByCategory } from '../../store/thunk/categoriesThunk.ts';
+import { getItemsByCategory } from '../../store/thunk/itemsThunk.ts';
 
 const CategoryItems = () => {
   const {categoryId} = useParams()

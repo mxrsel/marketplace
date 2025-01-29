@@ -12,7 +12,8 @@ export const register = createAsyncThunk<
     'users/register',
     async (registerMutation: RegisterMutation, {rejectWithValue}) => {
         try {
-            const response = await axiosApi.post<RegisterResponse>('/users', registerMutation);
+            const response = await axiosApi.post<RegisterResponse>('/users/register', registerMutation);
+          console.log(response.data);
             return response.data;
         } catch (e) {
             if (isAxiosError(e) && e.response && e.response.status === 400) {

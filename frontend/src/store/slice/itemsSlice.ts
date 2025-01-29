@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Item } from '../../types.ts';
-import { createNewItem, deleteItem, getAllItems, getItemById } from '../thunk/itemsThunk.ts';
+import { createNewItem, deleteItem, getAllItems, getItemById, getItemsByCategory } from '../thunk/itemsThunk.ts';
 
 interface ItemsSliceProps {
   items: Item[];
-  oneItem: Item | null
+  oneItem: Item | null;
+  categoryItem: Item[];
   itemsLoading: boolean;
   itemsError: boolean;
 }
@@ -12,6 +13,7 @@ interface ItemsSliceProps {
 const initialState: ItemsSliceProps = {
   items: [],
   oneItem: null,
+  categoryItem: [],
   itemsLoading: false,
   itemsError: false,
 }
@@ -76,6 +78,25 @@ const itemsSlice = createSlice({
         getItemById.rejected, (state) => {
           state.itemsLoading = false;
           state.itemsError = true;
+        }
+      )
+      .addCase(
+        getItemsByCategory.pending, (state) => {
+          state.itemsLoading = true;
+          state.itemsError = false;
+        }
+      )
+      .addCase(
+        getItemsByCategory.fulfilled, (state, action: PayloadAction<Item[]>) => {
+          state.itemsLoading = false;
+          state.categoryItem = action.payload;
+          state.itemsError = false;
+        }
+      )
+      .addCase(
+        getItemsByCategory.rejected, (state) => {
+          state.itemsLoading = false;
+          state.itemsError = true
         }
       )
       .addCase(

@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { useEffect } from 'react';
-import { getAllCategories } from '../../store/thunk/categoriesThunk.ts';
+import { fetchCategories } from '../../store/thunk/categoriesThunk.ts';
 import CategoriesItem from './CategoriesItem.tsx';
 import Spinner from '../UI/Spinner/Spinner.tsx';
 import { NavLink } from 'react-router-dom';
@@ -12,8 +12,10 @@ const Categories = () => {
   const loading = useAppSelector((state) => state.categories.categoriesLoading);
 
   useEffect(() => {
-    dispatch(getAllCategories());
-  }, [dispatch]);
+    if (!categories.length) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories.length]);
 
   return (
     <>
